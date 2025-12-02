@@ -1,4 +1,4 @@
-import { getSkuByNumber, type SKU } from './db';
+import { getSkuByNumber, getAllSkus, type SKU } from './db';
 
 export interface RestockResult {
   sku_number: string;
@@ -71,4 +71,45 @@ export function calculateRestock(
     health_status,
     formula_used: `${daily_sales} × (${lead_time} + ${safety_days} + ${restock_cadence}) − ${sku.current_inventory} = ${restock_amount}`,
   };
+}
+
+export function calculateRestockForSku(sku: SKU): RestockResult {
+  const coverage_days = sku.lead_time_days + sku.safety_days + sku.restock_cadence_days;
+  const required_stock = sku.daily_forecasted_sales * coverage_days;
+  const restock_amount = Math.max(0, Math.ceil(required_stock - sku.current_inventory));
+  const days_of_stock = sku.daily_forecasted_sales > 0
+    ? Math.floor(sku.current_inventory / sku.daily_forecasted_sales)
+    : Infinity;
+
+  let health_status: RestockResult['health_status'];
+  if (sku.current_inventory === 0) {
+    health_status = 'Out of Stock';
+  } else if (days_of_stock < 15) {
+    health_status = 'Critical';
+  } else if (days_of_stock < 30) {
+    health_status = 'Low';
+  } else {
+    health_status = 'Healthy';
+  }
+
+  return {
+    sku_number: sku.sku_number,
+    sku_name: sku.sku_name,
+    current_inventory: sku.current_inventory,
+    daily_forecasted_sales: sku.daily_forecasted_sales,
+    lead_time_days: sku.lead_time_days,
+    safety_days: sku.safety_days,
+    restock_cadence_days: sku.restock_cadence_days,
+    coverage_days,
+    required_stock,
+    restock_amount,
+    days_of_stock,
+    health_status,
+    formula_used: `${sku.daily_forecasted_sales} × (${sku.lead_time_days} + ${sku.safety_days} + ${sku.restock_cadence_days}) − ${sku.current_inventory} = ${restock_amount}`,
+  };
+}
+
+export function getAllInventoryWithRestock(): RestockResult[] {
+  const skus = getAllSkus();
+  return skus.map(calculateRestockForSku);
 }
