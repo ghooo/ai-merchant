@@ -1,0 +1,1902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Merchant Assistant - Product Requirements Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3B82F6;
+            --primary-hover: #2563EB;
+            --primary-light: #EFF6FF;
+            --gray-900: #1F2937;
+            --gray-700: #374151;
+            --gray-500: #6B7280;
+            --gray-300: #D1D5DB;
+            --gray-100: #F3F4F6;
+            --gray-50: #F9FAFB;
+            --success: #10B981;
+            --success-light: #D1FAE5;
+            --success-dark: #065F46;
+            --warning: #F59E0B;
+            --warning-light: #FEF3C7;
+            --warning-dark: #92400E;
+            --error: #EF4444;
+            --error-light: #FEE2E2;
+            --error-dark: #991B1B;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: var(--gray-900);
+            background: var(--gray-50);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--gray-900);
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 48px 0 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--primary);
+            color: var(--gray-900);
+        }
+
+        h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 32px 0 16px;
+            color: var(--gray-700);
+        }
+
+        h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 24px 0 12px;
+            color: var(--gray-700);
+        }
+
+        p {
+            margin-bottom: 16px;
+            color: var(--gray-700);
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: var(--gray-500);
+            margin-bottom: 32px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge-p0 {
+            background: var(--error-light);
+            color: var(--error-dark);
+        }
+
+        .badge-p1 {
+            background: var(--warning-light);
+            color: var(--warning-dark);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        th {
+            background: var(--gray-50);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--gray-500);
+        }
+
+        td {
+            font-size: 14px;
+        }
+
+        code {
+            background: var(--gray-100);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 13px;
+        }
+
+        pre {
+            background: var(--gray-900);
+            color: #E5E7EB;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 16px 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+        }
+
+        .color-swatch {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 4px 8px 4px 0;
+        }
+
+        .color-box {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            border: 1px solid var(--gray-200);
+        }
+
+        ul, ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        /* ========================================
+           UI VISUAL MOCKUPS
+           ======================================== */
+
+        .mockup-container {
+            background: var(--gray-100);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+            border: 1px solid var(--gray-300);
+        }
+
+        .mockup-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--gray-500);
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Full App Layout Mockup */
+        .app-layout-mockup {
+            display: flex;
+            background: var(--gray-50);
+            border-radius: 8px;
+            overflow: hidden;
+            height: 500px;
+            border: 1px solid var(--gray-300);
+        }
+
+        .mockup-sidebar {
+            width: 280px;
+            background: white;
+            border-right: 1px solid var(--gray-200);
+            padding: 16px;
+        }
+
+        .mockup-sidebar-logo {
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--primary);
+            margin-bottom: 24px;
+        }
+
+        .mockup-sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            font-size: 14px;
+            color: var(--gray-700);
+            cursor: pointer;
+        }
+
+        .mockup-sidebar-item:hover {
+            background: var(--gray-50);
+        }
+
+        .mockup-sidebar-item.active {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .mockup-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mockup-header {
+            height: 64px;
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+
+        .mockup-header-title {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .mockup-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .mockup-content {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        /* Chat Interface Mockup */
+        .chat-mockup {
+            background: white;
+            border-radius: 12px;
+            max-width: 700px;
+            margin: 0 auto;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .chat-messages {
+            padding: 24px;
+            min-height: 300px;
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 16px;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #E0E7FF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            flex-shrink: 0;
+            font-size: 14px;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .message.user .message-bubble {
+            background: var(--primary);
+            color: white;
+            border-radius: 16px 16px 4px 16px;
+        }
+
+        .message.assistant .message-bubble {
+            background: var(--gray-100);
+            color: var(--gray-900);
+            border-radius: 16px 16px 16px 4px;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 12px 16px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--gray-400);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-6px); }
+        }
+
+        .chat-input-container {
+            padding: 16px;
+            border-top: 1px solid var(--gray-200);
+            background: white;
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            align-items: center;
+            background: var(--gray-50);
+            border: 1px solid var(--gray-300);
+            border-radius: 24px;
+            padding: 6px 6px 6px 16px;
+        }
+
+        .chat-input-wrapper:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+        }
+
+        .chat-input {
+            flex: 1;
+            border: none;
+            background: none;
+            font-size: 14px;
+            outline: none;
+            color: var(--gray-900);
+        }
+
+        .chat-input::placeholder {
+            color: var(--gray-400);
+        }
+
+        .send-button {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .send-button:hover {
+            background: var(--primary-hover);
+        }
+
+        /* Quick Action Widgets */
+        .widgets-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .widget-card {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .widget-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(59,130,246,0.15);
+        }
+
+        .widget-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .widget-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 4px;
+        }
+
+        .widget-description {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        /* SKU Table Mockup */
+        .sku-table-mockup {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--gray-200);
+        }
+
+        .sku-table-mockup th {
+            background: var(--gray-50);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-healthy {
+            background: var(--success-light);
+            color: var(--success-dark);
+        }
+
+        .status-low {
+            background: var(--warning-light);
+            color: var(--warning-dark);
+        }
+
+        .status-critical {
+            background: var(--error-light);
+            color: var(--error-dark);
+        }
+
+        .status-out {
+            background: var(--gray-900);
+            color: white;
+        }
+
+        /* Scenario Comparison Cards */
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .scenario-card {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .scenario-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--gray-500);
+            margin-bottom: 4px;
+        }
+
+        .scenario-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 16px;
+        }
+
+        .scenario-change {
+            background: var(--warning-light);
+            border-left: 3px solid var(--warning);
+            padding: 8px 12px;
+            border-radius: 0 6px 6px 0;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .scenario-impact {
+            background: var(--primary-light);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #1E40AF;
+        }
+
+        /* Toast Notifications */
+        .toast-mockup {
+            position: relative;
+            padding: 40px 20px 20px;
+        }
+
+        .toast {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            padding: 16px;
+            max-width: 360px;
+            display: flex;
+            gap: 12px;
+            border-left: 4px solid;
+        }
+
+        .toast.warning {
+            border-left-color: var(--warning);
+        }
+
+        .toast.critical {
+            border-left-color: var(--error);
+        }
+
+        .toast.info {
+            border-left-color: var(--primary);
+        }
+
+        .toast.success {
+            border-left-color: var(--success);
+        }
+
+        .toast-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 2px;
+        }
+
+        .toast-message {
+            font-size: 13px;
+            color: var(--gray-500);
+        }
+
+        .toast-action {
+            font-size: 13px;
+            color: var(--primary);
+            font-weight: 500;
+            margin-top: 8px;
+            cursor: pointer;
+        }
+
+        .toast-close {
+            color: var(--gray-400);
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* Color Palette Grid */
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .color-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--gray-200);
+        }
+
+        .color-preview {
+            height: 60px;
+        }
+
+        .color-info {
+            padding: 12px;
+        }
+
+        .color-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .color-hex {
+            font-size: 12px;
+            color: var(--gray-500);
+            font-family: monospace;
+        }
+
+        /* Typography Scale */
+        .type-scale {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            border: 1px solid var(--gray-200);
+        }
+
+        .type-sample {
+            display: flex;
+            align-items: baseline;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .type-sample:last-child {
+            border-bottom: none;
+        }
+
+        .type-label {
+            width: 80px;
+            font-size: 12px;
+            color: var(--gray-500);
+            flex-shrink: 0;
+        }
+
+        .type-h1 { font-size: 24px; font-weight: 700; }
+        .type-h2 { font-size: 20px; font-weight: 600; }
+        .type-h3 { font-size: 16px; font-weight: 600; }
+        .type-body { font-size: 14px; font-weight: 400; }
+        .type-small { font-size: 12px; font-weight: 400; }
+        .type-caption { font-size: 11px; font-weight: 500; }
+
+        /* Input States */
+        .input-states-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .input-state-demo {
+            text-align: center;
+        }
+
+        .input-state-label {
+            font-size: 12px;
+            color: var(--gray-500);
+            margin-bottom: 8px;
+        }
+
+        .demo-input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 24px;
+            font-size: 14px;
+            background: var(--gray-50);
+        }
+
+        .demo-input.default {
+            border: 1px solid var(--gray-300);
+        }
+
+        .demo-input.focus {
+            border: 1px solid var(--primary);
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+        }
+
+        .demo-input.disabled {
+            border: 1px solid var(--gray-200);
+            background: var(--gray-100);
+            opacity: 0.7;
+        }
+
+        /* Button States */
+        .button-states-grid {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .demo-button {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+        }
+
+        .demo-button.primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .demo-button.primary-hover {
+            background: var(--primary-hover);
+            color: white;
+        }
+
+        .demo-button.disabled {
+            background: var(--gray-300);
+            color: var(--gray-500);
+            cursor: not-allowed;
+        }
+
+        .demo-button.secondary {
+            background: white;
+            color: var(--gray-700);
+            border: 1px solid var(--gray-300);
+        }
+
+        /* Widget Card States */
+        .widget-states-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .widget-state-demo {
+            text-align: center;
+        }
+
+        .widget-state-label {
+            font-size: 11px;
+            color: var(--gray-500);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .demo-widget {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: left;
+        }
+
+        .demo-widget.default {
+            border: 1px solid var(--gray-200);
+        }
+
+        .demo-widget.hover {
+            border: 1px solid var(--primary);
+            box-shadow: 0 4px 12px rgba(59,130,246,0.15);
+        }
+
+        .demo-widget.active {
+            background: var(--primary-light);
+            border: 1px solid var(--primary);
+        }
+
+        .demo-widget.disabled {
+            border: 1px solid var(--gray-200);
+            opacity: 0.5;
+        }
+
+        /* Responsive note */
+        .responsive-demo {
+            display: flex;
+            gap: 24px;
+            align-items: flex-end;
+        }
+
+        .device-frame {
+            background: var(--gray-200);
+            border-radius: 12px;
+            padding: 8px;
+        }
+
+        .device-screen {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .device-mobile .device-screen {
+            width: 120px;
+            height: 200px;
+        }
+
+        .device-tablet .device-screen {
+            width: 200px;
+            height: 150px;
+        }
+
+        .device-desktop .device-screen {
+            width: 300px;
+            height: 180px;
+        }
+
+        .device-label {
+            font-size: 11px;
+            color: var(--gray-500);
+            text-align: center;
+            margin-top: 8px;
+        }
+
+        /* Formula box */
+        .formula-box {
+            background: linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+
+        .formula-box code {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            display: block;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        /* JSON Output Example */
+        .json-example {
+            background: #1E1E1E;
+            border-radius: 8px;
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        .json-example code {
+            color: #D4D4D4;
+            background: none;
+        }
+
+        .json-key { color: #9CDCFE; }
+        .json-string { color: #CE9178; }
+        .json-number { color: #B5CEA8; }
+
+        /* Architecture Diagram */
+        .architecture-diagram {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            padding: 32px;
+            background: var(--gray-50);
+            border-radius: 12px;
+            flex-wrap: wrap;
+        }
+
+        .arch-component {
+            background: white;
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            min-width: 140px;
+        }
+
+        .arch-component.primary {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .arch-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .arch-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .arch-sublabel {
+            font-size: 11px;
+            color: var(--gray-500);
+        }
+
+        .arch-arrow {
+            display: flex;
+            align-items: center;
+            color: var(--gray-400);
+            font-size: 24px;
+        }
+
+        /* TOC */
+        .toc {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 32px;
+            border: 1px solid var(--gray-200);
+        }
+
+        .toc-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 16px;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .toc-list a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .toc-list a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <h1>AI Merchant Assistant</h1>
+        <p class="subtitle">Product Requirements Document</p>
+
+        <!-- Table of Contents -->
+        <div class="toc">
+            <div class="toc-title">Table of Contents</div>
+            <ul class="toc-list">
+                <li><a href="#overview">1. Product Overview</a></li>
+                <li><a href="#users">2. Target Users</a></li>
+                <li><a href="#use-cases">3. Use Cases</a></li>
+                <li><a href="#architecture">4. System Architecture</a></li>
+                <li><a href="#ui-specs">5. UI Specifications</a></li>
+                <li><a href="#system-prompt">6. System Prompt</a></li>
+                <li><a href="#database">7. SKU Database Schema</a></li>
+                <li><a href="#formula">8. Restock Formula</a></li>
+            </ul>
+        </div>
+
+        <!-- Section 1: Product Overview -->
+        <h2 id="overview">1. Product Overview</h2>
+        <div class="card">
+            <p>The AI Merchant Assistant helps ecommerce merchants manage several of their ecommerce decisions including pricing, market research and supply chain planning such as preventing stockouts by providing proactive restock recommendations and interactive scenario-based planning.</p>
+            <p>The assistant leverages AI to simplify complex decisions that many merchants struggle to perform manually due to limited time, expertise, resources or tooling leveraging simple natural language processing.</p>
+        </div>
+
+        <!-- Section 2: Target Users -->
+        <h2 id="users">2. Target Users</h2>
+
+        <div class="card">
+            <h4>Primary User <span class="badge badge-p0">P0</span></h4>
+            <p>Merchants selling on ecommerce platforms who are responsible for inventory planning and restocking decisions.</p>
+        </div>
+
+        <div class="card">
+            <h4>Secondary User <span class="badge badge-p1">P1</span></h4>
+            <p>Merchant's marketing users performing tasks such as market research, pricing analysis, and taking commercial decisions.</p>
+        </div>
+
+        <!-- Section 3: Use Cases -->
+        <h2 id="use-cases">3. Use Cases</h2>
+
+        <div class="card">
+            <h4>Use Case 1: Guided Assistance via Pre-Configured Prompts <span class="badge badge-p0">P0</span></h4>
+            <p><strong>As a platform</strong>, I want the AI assistant to present pre-built widgets, labels, or prompt options in the chatbox so sellers can quickly pick one option, clarify intent and start conversation with chatbot.</p>
+            <p><strong>Examples:</strong></p>
+            <ul>
+                <li><strong>Supply Agent</strong> - Show me my SKUs inventory health and restock recommendations</li>
+                <li><strong>Supply Agent</strong> - Analyze top-selling SKUs and sales trends</li>
+                <li><strong>Pricing Agent</strong> - Provide category pricing analysis and benchmarking</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h4>Use Case 2: Scenario-Based Restock Planning <span class="badge badge-p0">P0</span></h4>
+            <p><strong>As a merchant</strong>, I want to communicate with an AI agent to run "what-if" scenarios and recalculate restock recommendations by adjusting variables such as lead time, replenishment frequency, and demand assumptions, so I can make informed ordering decisions tailored to my constraints.</p>
+        </div>
+
+        <div class="card">
+            <h4>Use Case 3: Proactive Restock Nudges <span class="badge badge-p1">P1</span></h4>
+            <p><strong>As a platform</strong>, I want to notify merchants when SKUs are projected to go out of stock and provide recommended restock quantities with insights such as lost sales and demand changes, so merchants can avoid revenue loss and operational disruption.</p>
+            <p><strong>Entry Points:</strong> Pop-up alerts or chat notifications</p>
+        </div>
+
+        <!-- Section 4: System Architecture -->
+        <h2 id="architecture">4. System Architecture</h2>
+
+        <div class="mockup-container">
+            <div class="mockup-label">High-Level Architecture</div>
+            <div class="architecture-diagram">
+                <div class="arch-component primary">
+                    <div class="arch-icon">🤖</div>
+                    <div class="arch-label">LLM</div>
+                    <div class="arch-sublabel">OpenAI</div>
+                </div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-component">
+                    <div class="arch-icon">📚</div>
+                    <div class="arch-label">RAG Layer</div>
+                    <div class="arch-sublabel">Knowledge Base</div>
+                </div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-component">
+                    <div class="arch-icon">🗄️</div>
+                    <div class="arch-label">SKU Database</div>
+                    <div class="arch-sublabel">Airtable</div>
+                </div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-component">
+                    <div class="arch-icon">🔢</div>
+                    <div class="arch-label">Formula Engine</div>
+                    <div class="arch-sublabel">Restock Calc</div>
+                </div>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>LLM</strong> (OpenAI)</td>
+                    <td>Conversational interface, reasoning, and function-calling</td>
+                </tr>
+                <tr>
+                    <td><strong>RAG Layer</strong></td>
+                    <td>Retrieve supply-chain definitions, formulas, recommended stock rules from PDF</td>
+                </tr>
+                <tr>
+                    <td><strong>SKU Database</strong> (Airtable)</td>
+                    <td>Holds demand forecasts, inventory, lead time, safety stock</td>
+                </tr>
+                <tr>
+                    <td><strong>Restock Formula Engine</strong></td>
+                    <td>Computes recommended restock qty using formula</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Section 5: UI Specifications -->
+        <h2 id="ui-specs">5. UI Specifications</h2>
+
+        <!-- 5.1 Full Layout -->
+        <h3>5.1 Application Layout</h3>
+        <div class="mockup-container">
+            <div class="mockup-label">Full Application Layout</div>
+            <div class="app-layout-mockup">
+                <div class="mockup-sidebar">
+                    <div class="mockup-sidebar-logo">🛒 AI Merchant</div>
+                    <div class="mockup-sidebar-item active">
+                        <span>💬</span> Chat Assistant
+                    </div>
+                    <div class="mockup-sidebar-item">
+                        <span>📦</span> Inventory
+                    </div>
+                    <div class="mockup-sidebar-item">
+                        <span>📊</span> Analytics
+                    </div>
+                    <div class="mockup-sidebar-item">
+                        <span>⚙️</span> Settings
+                    </div>
+                </div>
+                <div class="mockup-main">
+                    <div class="mockup-header">
+                        <div class="mockup-header-title">AI Assistant</div>
+                        <div class="mockup-avatar">JD</div>
+                    </div>
+                    <div class="mockup-content">
+                        <div class="chat-mockup" style="box-shadow: none; border: 1px solid var(--gray-200);">
+                            <div class="chat-messages">
+                                <div class="message assistant">
+                                    <div class="message-avatar">🤖</div>
+                                    <div class="message-bubble">
+                                        Hello! I'm your AI Merchant Assistant. How can I help you today? You can ask me about inventory health, restock recommendations, or run what-if scenarios.
+                                    </div>
+                                </div>
+                                <div class="widgets-grid">
+                                    <div class="widget-card">
+                                        <div class="widget-icon">📦</div>
+                                        <div class="widget-title">Inventory Health</div>
+                                        <div class="widget-description">Check stock levels and recommendations</div>
+                                    </div>
+                                    <div class="widget-card">
+                                        <div class="widget-icon">📈</div>
+                                        <div class="widget-title">Sales Trends</div>
+                                        <div class="widget-description">Analyze top-selling SKUs</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chat-input-container">
+                                <div class="chat-input-wrapper">
+                                    <input type="text" class="chat-input" placeholder="Ask about inventory, pricing, or type your question...">
+                                    <button class="send-button">➤</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Element</th>
+                    <th>Property</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Sidebar</td><td>Width</td><td>280px (collapsible to 64px)</td></tr>
+                <tr><td>Header</td><td>Height</td><td>64px</td></tr>
+                <tr><td>Main Content</td><td>Max Width</td><td>1200px, centered</td></tr>
+                <tr><td>Background</td><td>Color</td><td><code>#F8F9FA</code></td></tr>
+            </tbody>
+        </table>
+
+        <!-- 5.2 Chat Interface -->
+        <h3>5.2 Chat Interface</h3>
+        <div class="mockup-container">
+            <div class="mockup-label">Chat Conversation</div>
+            <div class="chat-mockup">
+                <div class="chat-messages">
+                    <div class="message assistant">
+                        <div class="message-avatar">🤖</div>
+                        <div class="message-bubble">
+                            I've analyzed your inventory. You have 3 SKUs that need attention. Would you like me to show the details?
+                        </div>
+                    </div>
+                    <div class="message user">
+                        <div class="message-bubble">
+                            Yes, show me the inventory health for all SKUs
+                        </div>
+                    </div>
+                    <div class="message assistant">
+                        <div class="message-avatar">🤖</div>
+                        <div class="message-bubble">
+                            <div class="typing-indicator">
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-input-container">
+                    <div class="chat-input-wrapper">
+                        <input type="text" class="chat-input" placeholder="Ask about inventory, pricing, or type your question...">
+                        <button class="send-button">➤</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h4>Message Bubble Specifications</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Background</th>
+                    <th>Text Color</th>
+                    <th>Border Radius</th>
+                    <th>Max Width</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>User Message</td>
+                    <td><code>#3B82F6</code></td>
+                    <td><code>#FFFFFF</code></td>
+                    <td>16px 16px 4px 16px</td>
+                    <td>70%</td>
+                </tr>
+                <tr>
+                    <td>Assistant Message</td>
+                    <td><code>#F3F4F6</code></td>
+                    <td><code>#1F2937</code></td>
+                    <td>16px 16px 16px 4px</td>
+                    <td>85%</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- 5.3 Quick Action Widgets -->
+        <h3>5.3 Quick Action Widgets</h3>
+        <div class="mockup-container">
+            <div class="mockup-label">Pre-Configured Prompt Widgets</div>
+            <div class="widgets-grid">
+                <div class="widget-card">
+                    <div class="widget-icon">📦</div>
+                    <div class="widget-title">Inventory Health</div>
+                    <div class="widget-description">Show SKU inventory levels and restock recommendations</div>
+                </div>
+                <div class="widget-card">
+                    <div class="widget-icon">📈</div>
+                    <div class="widget-title">Sales Trends</div>
+                    <div class="widget-description">Analyze top-selling SKUs and sales patterns</div>
+                </div>
+                <div class="widget-card">
+                    <div class="widget-icon">💰</div>
+                    <div class="widget-title">Pricing Analysis</div>
+                    <div class="widget-description">Category pricing benchmarks vs competitors</div>
+                </div>
+                <div class="widget-card">
+                    <div class="widget-icon">🔮</div>
+                    <div class="widget-title">What-If Scenario</div>
+                    <div class="widget-description">Run restock scenarios with custom variables</div>
+                </div>
+            </div>
+        </div>
+
+        <h4>Widget Card States</h4>
+        <div class="mockup-container">
+            <div class="mockup-label">Interactive States</div>
+            <div class="widget-states-grid">
+                <div class="widget-state-demo">
+                    <div class="widget-state-label">Default</div>
+                    <div class="demo-widget default">
+                        <div class="widget-icon">📦</div>
+                        <div class="widget-title">Inventory</div>
+                    </div>
+                </div>
+                <div class="widget-state-demo">
+                    <div class="widget-state-label">Hover</div>
+                    <div class="demo-widget hover">
+                        <div class="widget-icon">📦</div>
+                        <div class="widget-title">Inventory</div>
+                    </div>
+                </div>
+                <div class="widget-state-demo">
+                    <div class="widget-state-label">Active</div>
+                    <div class="demo-widget active">
+                        <div class="widget-icon">📦</div>
+                        <div class="widget-title">Inventory</div>
+                    </div>
+                </div>
+                <div class="widget-state-demo">
+                    <div class="widget-state-label">Disabled</div>
+                    <div class="demo-widget disabled">
+                        <div class="widget-icon">📦</div>
+                        <div class="widget-title">Inventory</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5.4 Input Field -->
+        <h3>5.4 Input Field Component</h3>
+        <div class="mockup-container">
+            <div class="mockup-label">Input States</div>
+            <div class="input-states-grid">
+                <div class="input-state-demo">
+                    <div class="input-state-label">Default</div>
+                    <input type="text" class="demo-input default" placeholder="Type your message...">
+                </div>
+                <div class="input-state-demo">
+                    <div class="input-state-label">Focus</div>
+                    <input type="text" class="demo-input focus" placeholder="Type your message...">
+                </div>
+                <div class="input-state-demo">
+                    <div class="input-state-label">Disabled</div>
+                    <input type="text" class="demo-input disabled" placeholder="Type your message..." disabled>
+                </div>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Property</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Height</td><td>48px (expandable to 120px max)</td></tr>
+                <tr><td>Background</td><td><code>#F9FAFB</code></td></tr>
+                <tr><td>Border</td><td>1px solid <code>#D1D5DB</code></td></tr>
+                <tr><td>Border Radius</td><td>24px</td></tr>
+                <tr><td>Focus Border</td><td><code>#3B82F6</code></td></tr>
+                <tr><td>Placeholder</td><td>"Ask about inventory, pricing, or type your question..."</td></tr>
+            </tbody>
+        </table>
+
+        <!-- 5.5 Results Display -->
+        <h3>5.5 SKU Results Table</h3>
+        <div class="mockup-container">
+            <div class="mockup-label">Inventory Health Table</div>
+            <table class="sku-table-mockup">
+                <thead>
+                    <tr>
+                        <th>SKU Number</th>
+                        <th>SKU Name</th>
+                        <th style="text-align: right;">Current Inventory</th>
+                        <th style="text-align: right;">Restock Needed</th>
+                        <th style="text-align: center;">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>SKU-001</td>
+                        <td>Wireless Headphones Pro</td>
+                        <td style="text-align: right;">1,250</td>
+                        <td style="text-align: right;">0</td>
+                        <td style="text-align: center;"><span class="status-badge status-healthy">Healthy</span></td>
+                    </tr>
+                    <tr>
+                        <td>SKU-002</td>
+                        <td>USB-C Charging Cable</td>
+                        <td style="text-align: right;">180</td>
+                        <td style="text-align: right;">520</td>
+                        <td style="text-align: center;"><span class="status-badge status-low">Low</span></td>
+                    </tr>
+                    <tr>
+                        <td>SKU-003</td>
+                        <td>Bluetooth Speaker Mini</td>
+                        <td style="text-align: right;">45</td>
+                        <td style="text-align: right;">855</td>
+                        <td style="text-align: center;"><span class="status-badge status-critical">Critical</span></td>
+                    </tr>
+                    <tr>
+                        <td>SKU-004</td>
+                        <td>Phone Case Premium</td>
+                        <td style="text-align: right;">0</td>
+                        <td style="text-align: right;">1,200</td>
+                        <td style="text-align: center;"><span class="status-badge status-out">Out of Stock</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h4>Status Badge Specifications</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Background</th>
+                    <th>Text Color</th>
+                    <th>Preview</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Healthy</td>
+                    <td><code>#D1FAE5</code></td>
+                    <td><code>#065F46</code></td>
+                    <td><span class="status-badge status-healthy">Healthy</span></td>
+                </tr>
+                <tr>
+                    <td>Low</td>
+                    <td><code>#FEF3C7</code></td>
+                    <td><code>#92400E</code></td>
+                    <td><span class="status-badge status-low">Low</span></td>
+                </tr>
+                <tr>
+                    <td>Critical</td>
+                    <td><code>#FEE2E2</code></td>
+                    <td><code>#991B1B</code></td>
+                    <td><span class="status-badge status-critical">Critical</span></td>
+                </tr>
+                <tr>
+                    <td>Out of Stock</td>
+                    <td><code>#1F2937</code></td>
+                    <td><code>#FFFFFF</code></td>
+                    <td><span class="status-badge status-out">Out of Stock</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- 5.6 Scenario Comparison -->
+        <h3>5.6 Scenario Comparison Cards</h3>
+        <div class="mockup-container">
+            <div class="mockup-label">What-If Scenario Comparison</div>
+            <div class="scenario-grid">
+                <div class="scenario-card">
+                    <div class="scenario-label">Current</div>
+                    <div class="scenario-title">Baseline Scenario</div>
+                    <p style="font-size: 14px; margin-bottom: 12px;">
+                        <strong>Lead Time:</strong> 7 days<br>
+                        <strong>Safety Days:</strong> 5 days<br>
+                        <strong>Restock Cadence:</strong> 14 days
+                    </p>
+                    <div class="scenario-impact">
+                        Recommended Restock: <strong>350 units</strong>
+                    </div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-label">What-If</div>
+                    <div class="scenario-title">Extended Lead Time</div>
+                    <div class="scenario-change">
+                        ⚠️ Lead Time changed: 7 → <strong>14 days</strong>
+                    </div>
+                    <p style="font-size: 14px; margin-bottom: 12px;">
+                        <strong>Safety Days:</strong> 5 days<br>
+                        <strong>Restock Cadence:</strong> 14 days
+                    </p>
+                    <div class="scenario-impact">
+                        Recommended Restock: <strong>700 units</strong> (+350)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5.7 Notifications -->
+        <h3>5.7 Alert & Notification Components</h3>
+        <div class="mockup-container">
+            <div class="mockup-label">Toast Notifications</div>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <div class="toast warning">
+                    <div class="toast-icon">⚠️</div>
+                    <div class="toast-content">
+                        <div class="toast-title">Low Stock Alert</div>
+                        <div class="toast-message">SKU-002 is running low. Only 180 units remaining.</div>
+                        <div class="toast-action">View Details →</div>
+                    </div>
+                    <div class="toast-close">✕</div>
+                </div>
+                <div class="toast critical">
+                    <div class="toast-icon">🚨</div>
+                    <div class="toast-content">
+                        <div class="toast-title">Critical Stock Level</div>
+                        <div class="toast-message">SKU-003 will be out of stock in 3 days.</div>
+                        <div class="toast-action">Restock Now →</div>
+                    </div>
+                    <div class="toast-close">✕</div>
+                </div>
+                <div class="toast info">
+                    <div class="toast-icon">💡</div>
+                    <div class="toast-content">
+                        <div class="toast-title">Recommendation</div>
+                        <div class="toast-message">Based on trends, consider increasing safety stock for Q4.</div>
+                        <div class="toast-action">Learn More →</div>
+                    </div>
+                    <div class="toast-close">✕</div>
+                </div>
+                <div class="toast success">
+                    <div class="toast-icon">✅</div>
+                    <div class="toast-content">
+                        <div class="toast-title">Restock Order Placed</div>
+                        <div class="toast-message">Order #12345 for 500 units of SKU-002 confirmed.</div>
+                    </div>
+                    <div class="toast-close">✕</div>
+                </div>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Alert Type</th>
+                    <th>Icon Color</th>
+                    <th>Left Border</th>
+                    <th>Use Case</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Warning</td>
+                    <td><code>#F59E0B</code></td>
+                    <td>4px <code>#F59E0B</code></td>
+                    <td>Low stock levels</td>
+                </tr>
+                <tr>
+                    <td>Critical</td>
+                    <td><code>#EF4444</code></td>
+                    <td>4px <code>#EF4444</code></td>
+                    <td>Out of stock risk</td>
+                </tr>
+                <tr>
+                    <td>Info</td>
+                    <td><code>#3B82F6</code></td>
+                    <td>4px <code>#3B82F6</code></td>
+                    <td>Recommendations</td>
+                </tr>
+                <tr>
+                    <td>Success</td>
+                    <td><code>#10B981</code></td>
+                    <td>4px <code>#10B981</code></td>
+                    <td>Action completed</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- 5.8 Buttons -->
+        <h3>5.8 Button Components</h3>
+        <div class="mockup-container">
+            <div class="mockup-label">Button States</div>
+            <div class="button-states-grid">
+                <button class="demo-button primary">Primary</button>
+                <button class="demo-button primary-hover">Hover</button>
+                <button class="demo-button disabled">Disabled</button>
+                <button class="demo-button secondary">Secondary</button>
+            </div>
+        </div>
+
+        <!-- 5.9 Responsive -->
+        <h3>5.9 Responsive Breakpoints</h3>
+        <div class="mockup-container">
+            <div class="mockup-label">Device Layouts</div>
+            <div class="responsive-demo">
+                <div class="device-frame device-mobile">
+                    <div class="device-screen" style="background: var(--gray-50); padding: 8px;">
+                        <div style="background: white; height: 100%; border-radius: 4px;"></div>
+                    </div>
+                    <div class="device-label">Mobile<br>&lt; 640px</div>
+                </div>
+                <div class="device-frame device-tablet">
+                    <div class="device-screen" style="background: var(--gray-50); padding: 8px; display: flex;">
+                        <div style="width: 40px; background: white; margin-right: 8px; border-radius: 4px;"></div>
+                        <div style="flex: 1; background: white; border-radius: 4px;"></div>
+                    </div>
+                    <div class="device-label">Tablet<br>640px - 1024px</div>
+                </div>
+                <div class="device-frame device-desktop">
+                    <div class="device-screen" style="background: var(--gray-50); padding: 8px; display: flex;">
+                        <div style="width: 60px; background: white; margin-right: 8px; border-radius: 4px;"></div>
+                        <div style="flex: 1; background: white; border-radius: 4px;"></div>
+                    </div>
+                    <div class="device-label">Desktop<br>&gt; 1024px</div>
+                </div>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Breakpoint</th>
+                    <th>Width</th>
+                    <th>Layout Changes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Mobile</td>
+                    <td>&lt; 640px</td>
+                    <td>Single column, collapsed sidebar, stacked widgets</td>
+                </tr>
+                <tr>
+                    <td>Tablet</td>
+                    <td>640px - 1024px</td>
+                    <td>2-column widgets, narrow sidebar</td>
+                </tr>
+                <tr>
+                    <td>Desktop</td>
+                    <td>&gt; 1024px</td>
+                    <td>Full layout, 3-column widgets, expanded sidebar</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- 5.10 Typography -->
+        <h3>5.10 Typography Scale</h3>
+        <div class="mockup-container">
+            <div class="mockup-label">Type Samples</div>
+            <div class="type-scale">
+                <div class="type-sample">
+                    <div class="type-label">H1</div>
+                    <div class="type-h1">The quick brown fox jumps</div>
+                </div>
+                <div class="type-sample">
+                    <div class="type-label">H2</div>
+                    <div class="type-h2">The quick brown fox jumps over</div>
+                </div>
+                <div class="type-sample">
+                    <div class="type-label">H3</div>
+                    <div class="type-h3">The quick brown fox jumps over the lazy dog</div>
+                </div>
+                <div class="type-sample">
+                    <div class="type-label">Body</div>
+                    <div class="type-body">The quick brown fox jumps over the lazy dog. Pack my box with five dozen liquor jugs.</div>
+                </div>
+                <div class="type-sample">
+                    <div class="type-label">Small</div>
+                    <div class="type-small">The quick brown fox jumps over the lazy dog. Pack my box with five dozen liquor jugs.</div>
+                </div>
+                <div class="type-sample">
+                    <div class="type-label">Caption</div>
+                    <div class="type-caption">THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG</div>
+                </div>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Element</th>
+                    <th>Size</th>
+                    <th>Weight</th>
+                    <th>Line Height</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>H1</td><td>24px</td><td>700</td><td>1.3</td></tr>
+                <tr><td>H2</td><td>20px</td><td>600</td><td>1.4</td></tr>
+                <tr><td>H3</td><td>16px</td><td>600</td><td>1.4</td></tr>
+                <tr><td>Body</td><td>14px</td><td>400</td><td>1.5</td></tr>
+                <tr><td>Small</td><td>12px</td><td>400</td><td>1.5</td></tr>
+                <tr><td>Caption</td><td>11px</td><td>500</td><td>1.4</td></tr>
+            </tbody>
+        </table>
+        <p><strong>Font Family:</strong> <code>Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif</code></p>
+
+        <!-- 5.11 Color Palette -->
+        <h3>5.11 Color Palette</h3>
+
+        <h4>Primary Colors</h4>
+        <div class="color-grid">
+            <div class="color-card">
+                <div class="color-preview" style="background: #3B82F6;"></div>
+                <div class="color-info">
+                    <div class="color-name">Primary</div>
+                    <div class="color-hex">#3B82F6</div>
+                </div>
+            </div>
+            <div class="color-card">
+                <div class="color-preview" style="background: #2563EB;"></div>
+                <div class="color-info">
+                    <div class="color-name">Primary Hover</div>
+                    <div class="color-hex">#2563EB</div>
+                </div>
+            </div>
+            <div class="color-card">
+                <div class="color-preview" style="background: #EFF6FF;"></div>
+                <div class="color-info">
+                    <div class="color-name">Primary Light</div>
+                    <div class="color-hex">#EFF6FF</div>
+                </div>
+            </div>
+        </div>
+
+        <h4>Neutral Colors</h4>
+        <div class="color-grid">
+            <div class="color-card">
+                <div class="color-preview" style="background: #1F2937;"></div>
+                <div class="color-info">
+                    <div class="color-name">Gray 900</div>
+                    <div class="color-hex">#1F2937</div>
+                </div>
+            </div>
+            <div class="color-card">
+                <div class="color-preview" style="background: #374151;"></div>
+                <div class="color-info">
+                    <div class="color-name">Gray 700</div>
+                    <div class="color-hex">#374151</div>
+                </div>
+            </div>
+            <div class="color-card">
+                <div class="color-preview" style="background: #6B7280;"></div>
+                <div class="color-info">
+                    <div class="color-name">Gray 500</div>
+                    <div class="color-hex">#6B7280</div>
+                </div>
+            </div>
+            <div class="color-card">
+                <div class="color-preview" style="background: #D1D5DB;"></div>
+                <div class="color-info">
+                    <div class="color-name">Gray 300</div>
+                    <div class="color-hex">#D1D5DB</div>
+                </div>
+            </div>
+            <div class="color-card">
+                <div class="color-preview" style="background: #F3F4F6;"></div>
+                <div class="color-info">
+                    <div class="color-name">Gray 100</div>
+                    <div class="color-hex">#F3F4F6</div>
+                </div>
+            </div>
+            <div class="color-card">
+                <div class="color-preview" style="background: #F9FAFB;"></div>
+                <div class="color-info">
+                    <div class="color-name">Gray 50</div>
+                    <div class="color-hex">#F9FAFB</div>
+                </div>
+            </div>
+        </div>
+
+        <h4>Semantic Colors</h4>
+        <div class="color-grid">
+            <div class="color-card">
+                <div class="color-preview" style="background: #10B981;"></div>
+                <div class="color-info">
+                    <div class="color-name">Success</div>
+                    <div class="color-hex">#10B981</div>
+                </div>
+            </div>
+            <div class="color-card">
+                <div class="color-preview" style="background: #F59E0B;"></div>
+                <div class="color-info">
+                    <div class="color-name">Warning</div>
+                    <div class="color-hex">#F59E0B</div>
+                </div>
+            </div>
+            <div class="color-card">
+                <div class="color-preview" style="background: #EF4444;"></div>
+                <div class="color-info">
+                    <div class="color-name">Error</div>
+                    <div class="color-hex">#EF4444</div>
+                </div>
+            </div>
+            <div class="color-card">
+                <div class="color-preview" style="background: #3B82F6;"></div>
+                <div class="color-info">
+                    <div class="color-name">Info</div>
+                    <div class="color-hex">#3B82F6</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 6: System Prompt -->
+        <h2 id="system-prompt">6. System Prompt</h2>
+
+        <div class="card">
+            <p>Present a guided AI assistance experience for sellers by offering pre-built widgets (quick prompt options) in the chatbox, allowing them to select a focused task or start typing their own message.</p>
+        </div>
+
+        <h3>Use Case 1: Guided Assistance</h3>
+        <ul>
+            <li>Offer sellers pre-built prompt options:
+                <ol>
+                    <li>"Show me my inventory health and restock recommendations"</li>
+                    <li>"Analyze top-selling SKUs and sales trends"</li>
+                </ol>
+            </li>
+            <li>If a seller selects an option, clarify or confirm their intent before proceeding</li>
+            <li>For inventory or restock tasks:
+                <ul>
+                    <li>Pull SKU-level data from the SKU database</li>
+                    <li>Use the standard restock formula</li>
+                    <li>Display inventory health status and actionable recommendations</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h3>Use Case 2: Scenario-Based Planning</h3>
+        <ul>
+            <li>Prompt seller to specify variables: <code>lead time</code>, <code>restock cadence</code>, <code>safety days</code>, or <code>average daily demand</code></li>
+            <li>If not specified, use database values and state the assumption</li>
+            <li>Explain which values changed and how scenarios impact recommendations</li>
+        </ul>
+
+        <h3>General Instructions</h3>
+        <ul>
+            <li>Always use SKU-level data unless seller provides override</li>
+            <li>Always use the standard restock formula</li>
+            <li>Show input values, formula, and results for transparency</li>
+            <li><strong>Reasoning first, conclusions last</strong></li>
+        </ul>
+
+        <h3>Output Format</h3>
+        <div class="json-example">
+            <pre><code>{
+  <span class="json-key">"reasoning"</span>: <span class="json-string">"I retrieved your SKU data from the database. Using current inventory, daily forecasted sales, safety days, lead time, and restock cadence, I calculated restock needs for each SKU using the standard formula."</span>,
+  <span class="json-key">"results"</span>: [
+    {
+      <span class="json-key">"SKU_number"</span>: <span class="json-string">"SKU123"</span>,
+      <span class="json-key">"SKU_name"</span>: <span class="json-string">"Widget X"</span>,
+      <span class="json-key">"current_inventory"</span>: <span class="json-number">300</span>,
+      <span class="json-key">"restock_needed"</span>: <span class="json-number">700</span>,
+      <span class="json-key">"inventory_health"</span>: <span class="json-string">"Low – Restock needed within 7 days."</span>
+    }
+  ]
+}</code></pre>
+        </div>
+
+        <!-- Section 7: Database Schema -->
+        <h2 id="database">7. SKU Database Schema</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Field</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>sku_number</code></td>
+                    <td>String</td>
+                    <td>Unique identifier for the SKU</td>
+                </tr>
+                <tr>
+                    <td><code>sku_name</code></td>
+                    <td>String</td>
+                    <td>Product name</td>
+                </tr>
+                <tr>
+                    <td><code>current_inventory</code></td>
+                    <td>Integer</td>
+                    <td>Current stock units</td>
+                </tr>
+                <tr>
+                    <td><code>daily_forecasted_sales</code></td>
+                    <td>Float</td>
+                    <td>Average daily demand</td>
+                </tr>
+                <tr>
+                    <td><code>safety_days</code></td>
+                    <td>Integer</td>
+                    <td>Buffer days for safety stock</td>
+                </tr>
+                <tr>
+                    <td><code>lead_time_days</code></td>
+                    <td>Integer</td>
+                    <td>Days from order to delivery</td>
+                </tr>
+                <tr>
+                    <td><code>restock_cadence_days</code></td>
+                    <td>Integer</td>
+                    <td>Frequency of restock orders</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Section 8: Formula -->
+        <h2 id="formula">8. Restock Formula</h2>
+
+        <div class="formula-box">
+            <code>
+Restock Amount = (Lead_Time_Days × Avg_Daily_Demand)
+               + (Safety_Days × Avg_Daily_Demand)
+               + (Avg_Daily_Demand × Restock_Cycle_Days)
+               − Current_Inventory_Units
+            </code>
+        </div>
+
+        <div class="card">
+            <h4>Simplified Version</h4>
+            <pre><code>Restock Amount = Avg_Daily_Demand × (Lead_Time + Safety_Days + Restock_Cadence) − Current_Inventory</code></pre>
+        </div>
+
+        <div class="card">
+            <h4>Example Calculation</h4>
+            <p>For SKU with:</p>
+            <ul>
+                <li>Avg Daily Demand: 50 units</li>
+                <li>Lead Time: 7 days</li>
+                <li>Safety Days: 5 days</li>
+                <li>Restock Cadence: 14 days</li>
+                <li>Current Inventory: 300 units</li>
+            </ul>
+            <pre><code>Restock = 50 × (7 + 5 + 14) − 300
+        = 50 × 26 − 300
+        = 1300 − 300
+        = <strong>1000 units</strong></code></pre>
+        </div>
+
+    </div>
+</body>
+</html>
