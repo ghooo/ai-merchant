@@ -364,12 +364,96 @@ Two buttons above input:
 | Frontend | Next.js 14 + TypeScript | Full-stack React framework, SSR, API routes |
 | Styling | Tailwind CSS | Rapid UI development |
 | Backend | Next.js API Routes | Unified codebase, serverless functions |
-| Database | PostgreSQL | Reliable, SQL support |
-| Vector DB | Pinecone / pgvector | Efficient similarity search for RAG |
+| Database | SQLite (local) / PostgreSQL (prod) | Zero-config local dev, production-ready |
+| ORM | Prisma | Type-safe database access, easy migrations |
+| Vector DB | ChromaDB (local) | Runs locally, no cloud dependency |
 | Embeddings | OpenAI text-embedding-3-small | High quality, cost-effective embeddings |
 | LLM | OpenAI GPT-4 | Best reasoning capabilities |
-| PDF Processing | pdf-parse / LangChain | Document ingestion and chunking |
-| Hosting | Vercel + Supabase | Quick deployment, managed DB |
+| PDF Processing | pdf-parse + LangChain | Document ingestion and chunking |
+| Hosting | Local dev → Vercel + Supabase (prod) | Local-first, cloud-ready |
+
+---
+
+## Local Development Setup
+
+### Prerequisites
+- Node.js 18+
+- Python 3.9+ (for ChromaDB)
+- OpenAI API key
+
+### Quick Start
+
+```bash
+# Clone and install
+git clone <repo>
+cd ai-merchant
+npm install
+
+# Setup environment
+cp .env.example .env.local
+# Add your OPENAI_API_KEY to .env.local
+
+# Initialize database
+npx prisma generate
+npx prisma db push
+npm run db:seed
+
+# Start ChromaDB (runs on port 8000)
+pip install chromadb
+chroma run --path ./chroma-data
+
+# Start Next.js dev server (runs on port 3000)
+npm run dev
+```
+
+### Environment Variables
+
+```bash
+# .env.local
+OPENAI_API_KEY=sk-...
+DATABASE_URL="file:./dev.db"
+CHROMA_URL="http://localhost:8000"
+```
+
+### Project Structure
+
+```
+ai-merchant/
+├── app/
+│   ├── page.tsx              # Chat UI
+│   ├── api/
+│   │   ├── chat/route.ts     # Chat endpoint
+│   │   ├── inventory/route.ts
+│   │   ├── scenario/route.ts
+│   │   └── documents/
+│   │       ├── upload/route.ts
+│   │       └── route.ts
+│   └── components/
+│       ├── ChatContainer.tsx
+│       ├── MessageBubble.tsx
+│       ├── WidgetCard.tsx
+│       └── ResultsTable.tsx
+├── lib/
+│   ├── db.ts                 # Prisma client
+│   ├── chroma.ts             # ChromaDB client
+│   ├── openai.ts             # OpenAI client
+│   ├── rag.ts                # RAG retrieval logic
+│   └── restock.ts            # Restock formula
+├── prisma/
+│   ├── schema.prisma
+│   └── seed.ts
+├── chroma-data/              # Local vector DB storage
+├── uploads/                  # Uploaded PDFs
+└── .env.local
+```
+
+### Local Services
+
+| Service | URL | Description |
+|---------|-----|-------------|
+| Next.js | http://localhost:3000 | Web application |
+| ChromaDB | http://localhost:8000 | Vector database |
+| SQLite | ./prisma/dev.db | Local database file |
 
 ---
 
@@ -381,7 +465,7 @@ Two buttons above input:
 - [ ] Basic chat UI layout
 
 ### Phase 2: RAG Infrastructure
-- [ ] Vector database setup (Pinecone or pgvector)
+- [ ] ChromaDB local setup
 - [ ] PDF upload and processing pipeline
 - [ ] Document chunking and embedding generation
 - [ ] Semantic search endpoint
