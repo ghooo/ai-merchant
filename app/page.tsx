@@ -80,26 +80,28 @@ export default function Home() {
   ];
 
   return (
-    <main className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto p-6">
-        <header className="mb-8">
+    <main className="h-screen bg-gray-50 flex flex-col">
+      <div className="w-full max-w-6xl mx-auto p-6 flex flex-col flex-1 overflow-hidden">
+        <header className="mb-4 flex-shrink-0">
           <h1 className="text-2xl font-bold text-gray-900">
             AI Merchant Assistant
           </h1>
-          <p className="text-gray-500 mt-1">
+          <p className="text-gray-600 mt-1">
             Manage inventory, get restock recommendations, and run what-if scenarios
           </p>
         </header>
 
-        <ChatContainer
-          messages={messages}
-          isLoading={isLoading}
-          onSendMessage={sendMessage}
-        />
+        <div className="flex-1 overflow-hidden">
+          <ChatContainer
+            messages={messages}
+            isLoading={isLoading}
+            onSendMessage={sendMessage}
+          />
+        </div>
 
         {messages.length === 0 && (
-          <div className="mt-6">
-            <p className="text-sm text-gray-500 mb-3">Quick actions:</p>
+          <div className="mt-4 flex-shrink-0">
+            <p className="text-sm text-gray-600 mb-3">Quick actions:</p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {widgets.map(widget => (
                 <WidgetCard

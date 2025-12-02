@@ -35,8 +35,8 @@ export default function ChatContainer({
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-      <div className="h-96 overflow-y-auto p-6">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 h-full flex flex-col">
+      <div className="flex-1 overflow-y-auto p-6">
         {messages.length === 0 && (
           <div className="text-center text-gray-700 mt-16">
             <div className="text-4xl mb-4">AI</div>
@@ -53,7 +53,7 @@ export default function ChatContainer({
         <div ref={messagesEndRef} />
       </div>
 
-      <form onSubmit={handleSubmit} className="border-t border-gray-200 p-4">
+      <form onSubmit={handleSubmit} className="border-t border-gray-200 p-4 flex-shrink-0">
         <div className="flex gap-2">
           <input
             type="text"
