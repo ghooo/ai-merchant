@@ -258,6 +258,212 @@ Restock Amount = Avg_Daily_Demand × (Lead_Time + Safety_Days + Restock_Cadence)
 
 ---
 
+## Sequence Diagrams
+
+### 1. Inventory Health Flow
+
+```
+┌──────┐     ┌──────────┐     ┌─────────────┐     ┌────────┐     ┌────────┐
+│ User │     │ Frontend │     │ /api/chat   │     │ OpenAI │     │ SQLite │
+└──┬───┘     └────┬─────┘     └──────┬──────┘     └───┬────┘     └───┬────┘
+   │              │                  │                │              │
+   │ click widget │                  │                │              │
+   │─────────────▶│                  │                │              │
+   │              │                  │                │              │
+   │              │ POST /api/chat   │                │              │
+   │              │ {message}        │                │              │
+   │              │─────────────────▶│                │              │
+   │              │                  │                │              │
+   │              │                  │ messages +     │              │
+   │              │                  │ system prompt  │              │
+   │              │                  │ + functions    │              │
+   │              │                  │───────────────▶│              │
+   │              │                  │                │              │
+   │              │                  │ function_call: │              │
+   │              │                  │ get_inventory  │              │
+   │              │                  │◀───────────────│              │
+   │              │                  │                │              │
+   │              │                  │ SELECT * FROM skus            │
+   │              │                  │───────────────────────────────▶
+   │              │                  │                │              │
+   │              │                  │ rows[]         │              │
+   │              │                  │◀───────────────────────────────
+   │              │                  │                │              │
+   │              │                  │ function result│              │
+   │              │                  │ (SKU data)     │              │
+   │              │                  │───────────────▶│              │
+   │              │                  │                │              │
+   │              │                  │ final response │              │
+   │              │                  │ {reasoning,    │              │
+   │              │                  │  results}      │              │
+   │              │                  │◀───────────────│              │
+   │              │                  │                │              │
+   │              │ JSON response    │                │              │
+   │              │◀─────────────────│                │              │
+   │              │                  │                │              │
+   │ render table │                  │                │              │
+   │◀─────────────│                  │                │              │
+```
+
+### 2. Restock Recommendation Flow
+
+```
+┌──────┐     ┌──────────┐     ┌─────────────┐     ┌────────┐     ┌────────┐
+│ User │     │ Frontend │     │ /api/chat   │     │ OpenAI │     │ SQLite │
+└──┬───┘     └────┬─────┘     └──────┬──────┘     └───┬────┘     └───┬────┘
+   │              │                  │                │              │
+   │ "restock for │                  │                │              │
+   │  SKU-002?"   │                  │                │              │
+   │─────────────▶│                  │                │              │
+   │              │                  │                │              │
+   │              │ POST /api/chat   │                │              │
+   │              │─────────────────▶│                │              │
+   │              │                  │                │              │
+   │              │                  │ messages +     │              │
+   │              │                  │ functions      │              │
+   │              │                  │───────────────▶│              │
+   │              │                  │                │              │
+   │              │                  │ function_call: │              │
+   │              │                  │ calculate_     │              │
+   │              │                  │ restock        │              │
+   │              │                  │ {sku: SKU-002} │              │
+   │              │                  │◀───────────────│              │
+   │              │                  │                │              │
+   │              │                  │ SELECT * FROM skus            │
+   │              │                  │ WHERE sku_number = ?          │
+   │              │                  │───────────────────────────────▶
+   │              │                  │                │              │
+   │              │                  │ sku row        │              │
+   │              │                  │◀───────────────────────────────
+   │              │                  │                │              │
+   │              │                  ├────────────────┤              │
+   │              │                  │ APPLY FORMULA  │              │
+   │              │                  │ restock =      │              │
+   │              │                  │ sales × days   │              │
+   │              │                  │ − inventory    │              │
+   │              │                  ├────────────────┤              │
+   │              │                  │                │              │
+   │              │                  │ function result│              │
+   │              │                  │ {sku, restock, │              │
+   │              │                  │  formula_used} │              │
+   │              │                  │───────────────▶│              │
+   │              │                  │                │              │
+   │              │                  │ final response │              │
+   │              │                  │ with reasoning │              │
+   │              │                  │◀───────────────│              │
+   │              │                  │                │              │
+   │              │ JSON response    │                │              │
+   │              │◀─────────────────│                │              │
+   │              │                  │                │              │
+   │ render result│                  │                │              │
+   │◀─────────────│                  │                │              │
+```
+
+### 3. What-If Scenario Flow
+
+```
+┌──────┐     ┌──────────┐     ┌─────────────┐     ┌────────┐     ┌────────┐
+│ User │     │ Frontend │     │ /api/chat   │     │ OpenAI │     │ SQLite │
+└──┬───┘     └────┬─────┘     └──────┬──────┘     └───┬────┘     └───┬────┘
+   │              │                  │                │              │
+   │ "what if     │                  │                │              │
+   │  lead time   │                  │                │              │
+   │  = 10 days?" │                  │                │              │
+   │─────────────▶│                  │                │              │
+   │              │                  │                │              │
+   │              │ POST /api/chat   │                │              │
+   │              │─────────────────▶│                │              │
+   │              │                  │                │              │
+   │              │                  │───────────────▶│              │
+   │              │                  │                │              │
+   │              │                  │ function_call: │              │
+   │              │                  │ calculate_     │              │
+   │              │                  │ restock        │              │
+   │              │                  │ {sku: SKU-002, │              │
+   │              │                  │  lead_time: 10}│              │
+   │              │                  │◀───────────────│              │
+   │              │                  │                │              │
+   │              │                  │ SELECT sku     │              │
+   │              │                  │───────────────────────────────▶
+   │              │                  │◀───────────────────────────────
+   │              │                  │                │              │
+   │              │                  ├────────────────┤              │
+   │              │                  │ APPLY FORMULA  │              │
+   │              │                  │ with override  │              │
+   │              │                  │ lead_time = 10 │              │
+   │              │                  ├────────────────┤              │
+   │              │                  │                │              │
+   │              │                  │ {current: 1020,│              │
+   │              │                  │  scenario:1420,│              │
+   │              │                  │  impact: +400} │              │
+   │              │                  │───────────────▶│              │
+   │              │                  │                │              │
+   │              │                  │ comparison     │              │
+   │              │                  │ response       │              │
+   │              │                  │◀───────────────│              │
+   │              │                  │                │              │
+   │              │◀─────────────────│                │              │
+   │              │                  │                │              │
+   │ render       │                  │                │              │
+   │ comparison   │                  │                │              │
+   │◀─────────────│                  │                │              │
+```
+
+### 4. RAG Knowledge Flow
+
+```
+┌──────┐     ┌──────────┐     ┌─────────────┐     ┌────────┐     ┌──────────┐
+│ User │     │ Frontend │     │ /api/chat   │     │ OpenAI │     │ ChromaDB │
+└──┬───┘     └────┬─────┘     └──────┬──────┘     └───┬────┘     └────┬─────┘
+   │              │                  │                │               │
+   │ "what is     │                  │                │               │
+   │  safety      │                  │                │               │
+   │  stock?"     │                  │                │               │
+   │─────────────▶│                  │                │               │
+   │              │                  │                │               │
+   │              │ POST /api/chat   │                │               │
+   │              │─────────────────▶│                │               │
+   │              │                  │                │               │
+   │              │                  │───────────────▶│               │
+   │              │                  │                │               │
+   │              │                  │ function_call: │               │
+   │              │                  │ search_        │               │
+   │              │                  │ knowledge      │               │
+   │              │                  │ {query}        │               │
+   │              │                  │◀───────────────│               │
+   │              │                  │                │               │
+   │              │                  │ embed query    │               │
+   │              │                  │───────────────▶│               │
+   │              │                  │◀───────────────│               │
+   │              │                  │                │               │
+   │              │                  │ similarity search              │
+   │              │                  │────────────────────────────────▶
+   │              │                  │                │               │
+   │              │                  │ top-k chunks   │               │
+   │              │                  │◀────────────────────────────────
+   │              │                  │                │               │
+   │              │                  │ context chunks │               │
+   │              │                  │───────────────▶│               │
+   │              │                  │                │               │
+   │              │                  │ answer with    │               │
+   │              │                  │ grounded info  │               │
+   │              │                  │◀───────────────│               │
+   │              │                  │                │               │
+   │              │◀─────────────────│                │               │
+   │◀─────────────│                  │                │               │
+```
+
+### Flow Summary
+
+| Flow | Function Called | Data Source | Calculation |
+|------|-----------------|-------------|-------------|
+| Inventory Health | `get_inventory()` | SQLite → all SKUs | OpenAI summarizes |
+| Restock | `calculate_restock(sku)` | SQLite → 1 SKU | Backend applies formula |
+| What-If | `calculate_restock(sku, overrides)` | SQLite → 1 SKU | Backend with overrides |
+| Knowledge | `search_knowledge(query)` | ChromaDB → chunks | OpenAI answers with context |
+
+---
+
 ## API Endpoints
 
 ### POST /api/chat
