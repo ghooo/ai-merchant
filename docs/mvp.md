@@ -364,13 +364,12 @@ Two buttons above input:
 | Frontend | Next.js 14 + TypeScript | Full-stack React framework, SSR, API routes |
 | Styling | Tailwind CSS | Rapid UI development |
 | Backend | Next.js API Routes | Unified codebase, serverless functions |
-| Database | SQLite (local) / PostgreSQL (prod) | Zero-config local dev, production-ready |
-| ORM | Prisma | Type-safe database access, easy migrations |
+| Database | SQLite + better-sqlite3 | Zero-config, fast, no server needed |
 | Vector DB | ChromaDB (local) | Runs locally, no cloud dependency |
 | Embeddings | OpenAI text-embedding-3-small | High quality, cost-effective embeddings |
 | LLM | OpenAI GPT-4 | Best reasoning capabilities |
 | PDF Processing | pdf-parse + LangChain | Document ingestion and chunking |
-| Hosting | Local dev → Vercel + Supabase (prod) | Local-first, cloud-ready |
+| Hosting | Local dev → Vercel (prod) | Local-first, cloud-ready |
 
 ---
 
@@ -393,10 +392,8 @@ npm install
 cp .env.example .env.local
 # Add your OPENAI_API_KEY to .env.local
 
-# Initialize database
-npx prisma generate
-npx prisma db push
-npm run db:seed
+# Initialize database and seed data
+npm run db:init
 
 # Start ChromaDB (runs on port 8000)
 pip install chromadb
@@ -411,7 +408,6 @@ npm run dev
 ```bash
 # .env.local
 OPENAI_API_KEY=sk-...
-DATABASE_URL="file:./dev.db"
 CHROMA_URL="http://localhost:8000"
 ```
 
@@ -434,14 +430,15 @@ ai-merchant/
 │       ├── WidgetCard.tsx
 │       └── ResultsTable.tsx
 ├── lib/
-│   ├── db.ts                 # Prisma client
+│   ├── db.ts                 # SQLite queries
 │   ├── chroma.ts             # ChromaDB client
 │   ├── openai.ts             # OpenAI client
 │   ├── rag.ts                # RAG retrieval logic
 │   └── restock.ts            # Restock formula
-├── prisma/
-│   ├── schema.prisma
-│   └── seed.ts
+├── scripts/
+│   └── init-db.ts            # DB init + seed script
+├── data/
+│   └── app.db                # SQLite database file
 ├── chroma-data/              # Local vector DB storage
 ├── uploads/                  # Uploaded PDFs
 └── .env.local
@@ -453,7 +450,7 @@ ai-merchant/
 |---------|-----|-------------|
 | Next.js | http://localhost:3000 | Web application |
 | ChromaDB | http://localhost:8000 | Vector database |
-| SQLite | ./prisma/dev.db | Local database file |
+| SQLite | ./data/app.db | Local database file |
 
 ---
 
