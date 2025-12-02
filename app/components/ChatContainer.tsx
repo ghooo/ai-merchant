@@ -38,10 +38,10 @@ export default function ChatContainer({
     <div className="bg-white rounded-xl shadow-sm border border-gray-200">
       <div className="h-96 overflow-y-auto p-6">
         {messages.length === 0 && (
-          <div className="text-center text-gray-500 mt-16">
+          <div className="text-center text-gray-700 mt-16">
             <div className="text-4xl mb-4">AI</div>
-            <p>Hello! I&apos;m your AI Merchant Assistant.</p>
-            <p className="text-sm mt-2">
+            <p className="text-gray-900">Hello! I&apos;m your AI Merchant Assistant.</p>
+            <p className="text-sm mt-2 text-gray-600">
               Ask me about inventory health, restock recommendations, or run what-if scenarios.
             </p>
           </div>
@@ -60,7 +60,7 @@ export default function ChatContainer({
             value={input}
             onChange={e => setInput(e.target.value)}
             placeholder="Ask about inventory, pricing, or type your question..."
-            className="flex-1 px-4 py-3 rounded-full bg-gray-50 border border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            className="flex-1 px-4 py-3 rounded-full bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
             disabled={isLoading}
           />
           <button
