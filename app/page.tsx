@@ -81,7 +81,7 @@ export default function Home() {
 
   return (
     <main className="h-screen bg-gray-50 flex flex-col">
-      <div className="w-full max-w-6xl mx-auto p-6 flex flex-col flex-1 overflow-hidden">
+      <div className="w-full max-w-7xl mx-auto p-6 flex flex-col flex-1 overflow-hidden">
         <header className="mb-4 flex-shrink-0">
           <h1 className="text-2xl font-bold text-gray-900">
             AI Merchant Assistant
